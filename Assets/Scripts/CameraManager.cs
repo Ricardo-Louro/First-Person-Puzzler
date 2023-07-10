@@ -32,8 +32,8 @@ public class CameraManager : MonoBehaviour
     {
         gameObject.transform.position = player.transform.position;
         
-        mouseX = mouseSensitivityX * Input.GetAxisRaw("Mouse X") * Time.deltaTime;
-        mouseY = mouseSensitivityY * Input.GetAxisRaw("Mouse Y") * Time.deltaTime;
+        mouseX = mouseSensitivityX * Input.GetAxis("Mouse X") * Time.deltaTime;
+        mouseY = mouseSensitivityY * Input.GetAxis("Mouse Y") * Time.deltaTime;
 
         rotationX += mouseY;
         rotationY += mouseX;
@@ -51,20 +51,33 @@ public class CameraManager : MonoBehaviour
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             
-            if (hit.collider.gameObject.name == "Cube")
+            if (hit.collider.gameObject.GetComponent<InteractibleObject>() != null)
             {
+				InteractibleObject target = hit.collider.gameObject.GetComponent<InteractibleObject>();
+
+				//LEFT MOUSE BUTTON
                 if (Input.GetMouseButtonDown(0))
-                {
-                    InteractibleObject target = hit.collider.gameObject.GetComponent<InteractibleObject>();
-                    
-                    if (target.HoldScale == false)
-                    { 
-                        target.Hold_Scale(player);
-                    }
+                { 
+                    if (target.holdingScale == false)
+					{
+                        target.HoldScale(player);
+					}
                     else
-                    {
-                        target.Release_Scale();
-                    }
+					{
+						target.ReleaseScale();
+					}
+				}
+
+				//RIGHT MOUSE BUTTON
+                if (Input.GetMouseButtonDown(1))
+                {
+					//PICKUP AND DROP CUBE
+                }
+
+				//MIDDLE MOUSE BUTTON
+                if (Input.GetMouseButtonDown(2))
+                {
+					target.ResetScale();
                 }
             }
         }

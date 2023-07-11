@@ -47,7 +47,7 @@ public class CameraManager : MonoBehaviour
         Vector3 middleScreen = cam.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, cam.nearClipPlane));
         
         RaycastHit hit;
-        if (Physics.Raycast(middleScreen, transform.forward, out hit, 120f))
+        if (Physics.Raycast(middleScreen, transform.forward, out hit, 5000f))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             

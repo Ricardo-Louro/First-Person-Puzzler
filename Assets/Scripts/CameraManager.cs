@@ -6,6 +6,15 @@ public class CameraManager : MonoBehaviour
 {
     private Camera cam;
     private GameObject player;
+    
+    [SerializeField]
+    private GameObject holdPos;
+    private GameObject heldObj;
+
+	[SerializeField]
+    private float pickupForce;
+
+    private Rigidbody targetRB;
 
     [SerializeField]
     private float mouseXLimit = 88f;
@@ -69,10 +78,44 @@ public class CameraManager : MonoBehaviour
 				}
 
 				//RIGHT MOUSE BUTTON
-                if (Input.GetMouseButtonDown(1))
-                {
-					//PICKUP AND DROP CUBE
-                }
+				if (Input.GetMouseButtonDown(1))
+				{
+					if(heldObj == null)
+						if (target.CalculateDistance(player) <= 2f)
+							if (target.transform.localScale.x <= 0.8f)
+							{
+								targetRB = target.GetComponent<Rigidbody>();
+								targetRB.useGravity = false;
+								targetRB.drag = 10;
+								targetRB.constraints = RigidbodyConstraints.FreezeRotation;
+
+								targetRB.transform.parent = holdPos.transform;
+								heldObj = hit.collider.gameObject;
+
+							}
+							else
+								Debug.Log("Too big!");
+						else
+							Debug.Log("Out of range!");
+					else
+					{
+						targetRB.useGravity = true;
+						targetRB.drag = 1;
+						targetRB.constraints = RigidbodyConstraints.None;
+
+						targetRB.transform.parent = null;
+						heldObj = null;
+					}
+				}
+
+				if (heldObj != null)
+				{
+					if (Vector3.Distance(heldObj.transform.position, holdPos.transform.position) > 0.1f)
+					{
+						Vector3 moveDirection = (holdPos.transform.position - heldObj.transform.position);
+						targetRB.AddForce(moveDirection * pickupForce);
+					}
+				}
 
 				//MIDDLE MOUSE BUTTON
                 if (Input.GetMouseButtonDown(2))

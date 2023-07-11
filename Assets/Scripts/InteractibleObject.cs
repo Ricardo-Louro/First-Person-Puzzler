@@ -70,7 +70,7 @@ public class InteractibleObject : MonoBehaviour
 		gameObject.transform.localScale = originalScale;
 	}
 
-    private float CalculateDistance(GameObject player)
+    public float CalculateDistance(GameObject player)
     {
         float distance = Mathf.Sqrt(Mathf.Pow((player.transform.position.x - gameObject.transform.position.x),2) +
                                     Mathf.Pow((player.transform.position.y - gameObject.transform.position.y),2) +
